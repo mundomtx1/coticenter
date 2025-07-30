@@ -1,0 +1,23 @@
+# Archivo .dockerignore
+
+# Dependencias
+node_modules
+
+# Archivos de build y caché de Next.js
+.next
+
+# Archivos de configuración local
+.env.local
+
+# Archivos de Docker
+Dockerfile
+.dockerignore
+
+# Archivos de Git
+.git
+.gitignore
+
+# Archivos de logs de npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
