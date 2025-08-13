@@ -14,11 +14,8 @@ export type CreditTransaction = {
 };
 
 export type DashboardStatsData = {
-    total_credito: number;
-    total_credito_pretty: string;
-    total_credito_usados: number;
-    total_credito_usados_pretty: string;
-    total_usuarios: number;
+    prospects: number;
+    clients: string;
 };
 
 export type MovementTransaction = {
@@ -30,16 +27,32 @@ export type MovementTransaction = {
     created_at: string;
 };
 
-export type ClientesTransaction = {
-    usuario: string;
-    nombre: string;
-    apellido: string;
-    email: string;
-    estatus: number;
-    estatus_nombre: string;
+export type Cliente = {
     id: number;
+    name: string;
+    lastname: string;
+    email: string;
+    document: string;
+    phone: string;
+    address: string;
+    status_id: number;
+    status_name: string;
+    type_id: number;
+    type_name: string;
     created_at: string;
+    updated_at: string;
 };
+
+export type ClienteEditar = {
+    name: string;
+	lastname: string;
+	document: string;
+	address: string;
+	phone: string; 
+	email: string;
+	type_id: number;
+	status_id: number;
+}
 
 export type Afiliados = {
     id: number;

@@ -4,7 +4,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DashboardStatsData } from "@/types";
-import { Users, Wallet, TrendingDown } from "lucide-react";
+import { UserPlus, UserCheck, ClipboardList } from "lucide-react";
 import * as React from "react";
 
 // Propiedades que el componente principal recibirá
@@ -44,24 +44,26 @@ const StatCard = ({
 export function DashboardStats({ stats, isLoading }: DashboardStatsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-8">
-    <StatCard
-        title="Créditos Disponibles"
-        value={stats?.total_credito_pretty ?? "..."}
-        icon={Wallet}
+      <StatCard
+        title="Prospectos"
+        value={stats?.prospects ?? "..."}
+        icon={UserPlus}
         isLoading={isLoading}
-    />
-    <StatCard
-        title="Créditos Usados"
-        value={stats?.total_credito_usados_pretty ?? "..."}
-        icon={TrendingDown}
+      />
+
+      <StatCard
+        title="Clientes"
+        value={stats?.clients ?? "..."}
+        icon={UserCheck}
         isLoading={isLoading}
-    />
-    <StatCard
-        title="Total Clientes"
-        value={stats?.total_usuarios ?? "..."}
-        icon={Users}
+      />
+
+      <StatCard
+        title="Presupuestos (Cotizaciones)"
+        value="0"
+        icon={ClipboardList}
         isLoading={isLoading}
-    />
+      />
     </div>
   );
 }

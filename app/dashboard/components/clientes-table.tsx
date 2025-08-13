@@ -4,17 +4,15 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { DataTable, PaginationMeta } from "@/components/ui/data-table";
 import { fetchWithAuth } from "@/hooks/useApi";
-import { ClientesTransaction } from "@/types";
+import { Cliente } from "@/types";
 import { columns as columnDef } from "@/app/dashboard/data/clientes-columns";
 
 export function ClientesDataTable() {
     const router = useRouter();
-    const [data, setData] = useState<ClientesTransaction[]>([]);
+    const [data, setData] = useState<Cliente[]>([]);
     const [pagination, setPagination] = useState<PaginationMeta | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-    const [selectedClient, setSelectedClient] = React.useState<ClientesTransaction | null>(null);
 
     // Función que abrirá el diálogo
     const handleViewAffiliates = (clientId: number) => {
@@ -22,14 +20,13 @@ export function ClientesDataTable() {
     };
 
     // Creamos una nueva definición de columnas que incluye la función en 'meta'
-    const columns = React.useMemo(
-        () => {
-            // Tomamos la primera columna de acciones (la última) y le añadimos la función
-            const actionColumn = columnDef.find(c => c.id === 'actions');
-            if (actionColumn) {
-                actionColumn.meta = { ...actionColumn.meta, viewAffiliates: handleViewAffiliates };
-            }
-            return columnDef;
+    const columns = React.useMemo(() => {
+        // Tomamos la primera columna de acciones (la última) y le añadimos la función
+        const actionColumn = columnDef.find(c => c.id === 'actions');
+        if (actionColumn) {
+            actionColumn.meta = { ...actionColumn.meta, viewAffiliates: handleViewAffiliates };
+        }
+        return columnDef;
     }, [router]);
 
     // Estado para los filtros que se enviarán a la API
@@ -56,7 +53,7 @@ export function ClientesDataTable() {
                     params.append('search', filters.search);
                 }
 
-                const response = await fetchWithAuth(`/master/usuarios/?${params.toString()}`, { method: "GET" });
+                const response = await fetchWithAuth(`/clients?${params.toString()}`, { method: "GET" });
 
                 if (!response.ok) {
                     // Intenta obtener un mensaje de error más específico si es posible

@@ -46,7 +46,7 @@ export default function DashboardLayout({
     try {
 
       // Llamamos al endpoint de verificación de sesión de AdonisJS
-      await fetchWithAuthLogout('/oauth/logout-admin', { method: 'GET' });
+      await fetchWithAuthLogout('/oauth/logout', { method: 'GET' });
 
     } catch (error) {
       console.error("Fallo en la petición de logout:", error);
@@ -66,7 +66,7 @@ export default function DashboardLayout({
         <div className="flex h-16 items-center border-b px-4">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
             <Package className="h-6 w-6" />
-            {!isSidebarCollapsed && <span>Lidbiz</span>}
+            {!isSidebarCollapsed && <span>Coticenter</span>}
           </Link>
         </div>
         <nav className="flex-grow p-2">

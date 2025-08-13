@@ -24,7 +24,7 @@ export default function DashboardPage() {
       try {
         setStatsLoading(true);
         // Asegúrate de que la URL del endpoint sea la correcta
-        const response = await fetchWithAuth("/master/widgets", { method: "GET" });
+        const response = await fetchWithAuth("/reports/", { method: "GET" });
         
         if (!response.ok) {
           throw new Error("No se pudieron cargar las estadísticas.");
@@ -43,7 +43,7 @@ export default function DashboardPage() {
     const getUserData = async () => {
       try {
         // Llamamos al endpoint de verificación de sesión de AdonisJS
-        const response = await fetchWithAuth('/oauth/sesion-admin', { method: 'GET' });
+        const response = await fetchWithAuth('/auth/login', { method: 'GET' });
 
         if (!response.ok) {
           throw new Error('No se pudo verificar la sesión.');
@@ -70,7 +70,7 @@ export default function DashboardPage() {
   return (
     <div className='container mx-auto'>
       <h1 className="text-3xl font-bold mb-2">Bienvenido {user?.usuario}!</h1>
-      <p className="text-gray-500 dark:text-gray-400 mb-6">Una vista rápida del estado actual de lidbiz.</p>
+      <p className="text-gray-500 dark:text-gray-400 mb-6">Una vista rápida del estado actual de Coticenter</p>
 
       {/* Mostramos las tarjetas de estadísticas, pasándoles sus datos y estado de carga */}
       {statsError ? (
@@ -83,7 +83,7 @@ export default function DashboardPage() {
       )}
 
       {/* Aquí integramos la tabla de créditos */}
-      <CreditsDataTable />
+      {/* <CreditsDataTable /> */}
     </div>
   );
 }

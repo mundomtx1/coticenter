@@ -1,9 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ClientesTransaction } from "@/types";
+import { Cliente } from "@/types";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Eye, ClipboardList  } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,34 +12,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
-export const columns: ColumnDef<ClientesTransaction>[] = [
+export const columns: ColumnDef<Cliente>[] = [
     {
-        accessorKey: "usuario",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                    className="cursor-pointer"
-                >
-                Usuario
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
-        cell: ({ row }) => {
-            // Mostramos el valor ya formateado que nos da la API
-            return <div className="text-left font-medium px-3">{row.getValue("usuario")}</div>;
-        },
-        meta: {
-            displayName: "Usuario", // Nombre para el menú
-            cellClassName: "w-[150px]", 
-        }
-    },
-
-    {
-        accessorKey: "nombre",
+        accessorKey: "name",
         header: ({ column }) => {
             return (
                 <Button
@@ -53,8 +30,8 @@ export const columns: ColumnDef<ClientesTransaction>[] = [
             );
         },
         cell: ({ row }) => {
-            // Mostramos el valor ya formateado que nos da la API
-            return <div className="text-left font-medium px-3">{row.getValue("nombre")}</div>;
+            const name = row.getValue("name") as string;
+            return <div className="text-left font-medium px-3 capitalize">{name}</div>;
         },
         meta: {
             displayName: "Nombre", // Nombre para el menú
@@ -63,7 +40,7 @@ export const columns: ColumnDef<ClientesTransaction>[] = [
     },
 
     {
-        accessorKey: "apellido",
+        accessorKey: "lastname",
         header: ({ column }) => {
             return (
                 <Button
@@ -77,8 +54,8 @@ export const columns: ColumnDef<ClientesTransaction>[] = [
             );
         },
         cell: ({ row }) => {
-            // Mostramos el valor ya formateado que nos da la API
-            return <div className="text-left font-medium px-3">{row.getValue("apellido")}</div>;
+            const lastname = row.getValue("lastname") as string;
+            return <div className="text-left font-medium px-3 capitalize">{lastname}</div>;
         },
         meta: {
             displayName: "Apellido", // Nombre para el menú
@@ -109,12 +86,49 @@ export const columns: ColumnDef<ClientesTransaction>[] = [
         }
     },
 
+    // Columna para el Tipo Cliente (mapeando el número a un texto)
+    {
+        accessorKey: "type_id",
+        header: "Tipo Cliente",
+        cell: ({ row }) => {
+            const type = row.getValue("type_id");
+            let statusText = "Desconocido";
+            let statusClass = "bg-gray-100 text-gray-800";
+
+            switch (type) {
+                case 1:
+                    statusText = "Cliente";
+                    statusClass = "bg-green-100 text-green-800";
+                break;
+                case 2:
+                    statusText = "Prospecto";
+                    statusClass = "bg-yellow-100 text-yellow-800";
+                break;
+                case 3:
+                    statusText = "Proveedor";
+                    statusClass = "bg-red-100 text-red-800";
+                break;
+            }
+        
+            // Usamos un "Badge" para que se vea más bonito
+            return (
+                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}`}>
+                    {statusText}
+                </span>
+            );
+        },
+        meta: {
+            displayName: "Tipo Cliente",
+            cellClassName: "w-[120px]", 
+        }
+    },
+
     // Columna para el Estado (mapeando el número a un texto)
     {
-        accessorKey: "estatus",
+        accessorKey: "status_id",
         header: "Estado",
         cell: ({ row }) => {
-            const status = row.getValue("estatus");
+            const status = row.getValue("status_id");
             let statusText = "Desconocido";
             let statusClass = "bg-gray-100 text-gray-800";
 
@@ -156,7 +170,7 @@ export const columns: ColumnDef<ClientesTransaction>[] = [
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 className="cursor-pointer"
               >
-                Fecha
+                Registrado
                 <ArrowUpDown className="ml-2 h-4 w-4" />
               </Button>
             );
@@ -166,7 +180,7 @@ export const columns: ColumnDef<ClientesTransaction>[] = [
             return <div className="px-3">{row.getValue("created_at")}</div>
         },
         meta: {
-            displayName: "Fecha",
+            displayName: "Registrado",
             cellClassName: "w-[150px]",  
         }
     },
@@ -174,20 +188,8 @@ export const columns: ColumnDef<ClientesTransaction>[] = [
     // Opcional: Columna de Acciones (si quieres añadir botones de "Ver", "Editar", etc.)
     {
         id: "actions",
-        cell: ({ row, column }) => {
-            const client: ClientesTransaction = row.original;
-
-            // Accedemos a la función desde meta.
-            const viewAffiliatesFn = column.columnDef.meta?.viewAffiliates;
-
-            // const handleApproveCredit = () => {
-            //     // Aquí podrías llamar a una API para aprobar la compra
-            //     // y luego refrescar los datos de la tabla.
-            //     if (confirm(`¿Estás seguro de que quieres aprobar la compra de crédito para la factura ${ClientesTransaction.id}?`)) {
-            //       console.log("Aprobando compra:", ClientesTransaction);
-            //       alert(`Compra de crédito aprobada para la factura: ${ClientesTransaction.id}`);
-            //     }
-            // };
+        cell: ({ row }) => {
+            const client: Cliente = row.original;
 
             return (
                 <DropdownMenu>
@@ -200,20 +202,17 @@ export const columns: ColumnDef<ClientesTransaction>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                            onClick={() => viewAffiliatesFn?.(client.id)}
-                            disabled={!viewAffiliatesFn} // Deshabilitamos si la función no se pasó
-                            className="cursor-pointer"
-                        >
-                            Ver afiliados
+                        <DropdownMenuItem>
+                            <Link href={`/dashboard/clientes/${client.id}/ficha`}>
+                                <Eye className="ml-2 h-4 w-4 me-2 inline-flex " /> Ver mas
+                            </Link>
                         </DropdownMenuItem>
-                        
-                        {/* Opcional: Mostrar la opción de aprobar solo si el estado es 'Pendiente' */}
-                        {/* {ClientesTransaction.estatus === 1 && (
-                        <DropdownMenuItem onClick={handleApproveCredit}>
-                            Aprobar Compra de Crédito
+                        <DropdownMenuItem className="cursor-pointer">
+                            <Link href={`/dashboard/clientes/${client.id}/ficha`}>
+                                <ClipboardList className="ml-2 h-4 w-4 me-2 inline-flex " /> Presupuestos
+                            </Link>
+                            
                         </DropdownMenuItem>
-                        )} */}
                     </DropdownMenuContent>
                 </DropdownMenu>
             );
