@@ -1,49 +1,23 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // Hook para la redirección
 import { fetchWithAuth } from '@/hooks/useApi';
-import { ClienteEditar } from '@/types';
+import { ClienteCrear } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Save } from 'lucide-react';
 
-interface EditClientePageProps {
-    params: Promise<{ id: string }>;
-}
+export default function CreateClientePage() {
 
-export default function EditClientePage({ params }: EditClientePageProps) {
-    const unwrappedParams = React.use(params);
-    const router = useRouter();
-
-    // Ahora accedemos a la propiedad 'id' desde el objeto desenvuelto
-    const clientId = parseInt(unwrappedParams.id, 10);
-
-    const [formData, setFormData] = useState<Partial<ClienteEditar>>({});
-    const [loading, setLoading] = useState(true);
+    const router = useRouter(); 
+    const [formData, setFormData] = useState<Partial<ClienteCrear>>({});
+    const [loading, setLoading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    // 1. Cargar los datos existentes del cliente
-    useEffect(() => {
-        const loadClienteData = async () => {
-            if (!clientId) return;
-            try {
-                const response = await fetchWithAuth(`/clients/${clientId}`, { method: "GET" });
-                if (!response.ok) throw new Error("No se pudo cargar el cliente para editar.");
-                const result = await response.json();
-                setFormData(result.data);
-            } catch (err: any) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadClienteData();
-    }, [clientId]);
 
     // 2. Manejador genérico para actualizar el estado del formulario
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,16 +36,19 @@ export default function EditClientePage({ params }: EditClientePageProps) {
         setError(null);
 
         try {
-            const response = await fetchWithAuth(`/clients/${clientId}`, {
-                method: 'PUT', // o 'PATCH' si solo envías los campos cambiados
+            const response = await fetchWithAuth(`/clients/`, {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
 
+            console.log('response')
+            console.log(response)
+
             if (!response.ok) throw new Error("Error al actualizar el cliente.");
 
             // Redirigir de vuelta a la página de detalles después de guardar
-            router.push(`/dashboard/clientes/${clientId}/ficha`);
+            router.push(`/dashboard/clientes/`);
 
         } catch (err: any) {
             setError(err.message);
@@ -80,19 +57,15 @@ export default function EditClientePage({ params }: EditClientePageProps) {
         }
     };
 
-    if (loading) {
-        return <div className="text-center py-8">Cargando formulario...</div>;
-    }
-
     return (
         <div className='container mx-auto'>
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h1 className="text-3xl font-bold">Editar Cliente</h1>
-                    <p className="text-gray-500">Actualiza la información del cliente.</p>
+                    <h1 className="text-3xl font-bold">Crear Cliente</h1>
+                    <p className="text-gray-500">Agrega un nuevo cliente.</p>
                 </div>
                 <Button asChild variant="outline">
-                    <Link href={`/dashboard/clientes/${clientId}/ficha`}>
+                    <Link href={`/dashboard/clientes/`}>
                         <ArrowLeft className="mr-2 h-4 w-4" />
                         Cancelar y Volver
                     </Link>
@@ -137,20 +110,6 @@ export default function EditClientePage({ params }: EditClientePageProps) {
                         <Input id="address" name="address" value={formData.address || ''} onChange={handleChange} />
                     </div>
 
-                    {/* Campo Estatus */}
-                    <div className="space-y-2">
-                        <Label htmlFor="status_id">Estatus</Label>
-                        <Select name="status_id" value={String(formData.status_id || '')} onValueChange={(value) => handleSelectChange('status_id', value)}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Selecciona un estatus" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="1">Activo</SelectItem>
-                                <SelectItem value="2">Inactivo</SelectItem> {/* Asumiendo '2' como inactivo */}
-                            </SelectContent>
-                        </Select>
-                    </div>
-
                     {/* Campo Tipo */}
                     <div className="space-y-2">
                         <Label htmlFor="type_id">Tipo</Label>
@@ -170,8 +129,8 @@ export default function EditClientePage({ params }: EditClientePageProps) {
                 {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
                 <div className="flex justify-end mt-8 border-t pt-6">
-                    <Button type="submit" disabled={isSaving}  className="cursor-pointer">
-                        {isSaving ? 'Guardando...' : <> <Save className="mr-2 h-4 w-4" /> Guardar Cambios </>}
+                    <Button type="submit" disabled={isSaving} className="cursor-pointer">
+                        {isSaving ? 'Guardando...' : <> <Save className="mr-2 h-4 w-4" /> Guardar Cliente</>}
                     </Button>
                 </div>
             </form>

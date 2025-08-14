@@ -207,11 +207,15 @@ export const columns: ColumnDef<Cliente>[] = [
                                 <Eye className="ml-2 h-4 w-4 me-2 inline-flex " /> Ver mas
                             </Link>
                         </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link href={`/dashboard/clientes/${client.id}/edit`}>
+                                <Eye className="ml-2 h-4 w-4 me-2 inline-flex " /> Actualizar
+                            </Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer">
                             <Link href={`/dashboard/clientes/${client.id}/ficha`}>
                                 <ClipboardList className="ml-2 h-4 w-4 me-2 inline-flex " /> Presupuestos
                             </Link>
-                            
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

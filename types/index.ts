@@ -54,6 +54,16 @@ export type ClienteEditar = {
 	status_id: number;
 }
 
+export type ClienteCrear = {
+    name: string;
+	lastname: string;
+	document: string;
+	address: string;
+	phone: string; 
+	email: string;
+	type_id: number;
+}
+
 export type Afiliados = {
     id: number;
     usuario: string;
