@@ -64,6 +64,33 @@ export type ClienteCrear = {
 	type_id: number;
 }
 
+export type Items = {
+    id: number;
+    name: string;
+    description: string;
+    price: string;
+    descount: string;
+    status_id: number;
+    status_name: string;
+    created_at: string;
+    updated_at: string;
+};
+
+export type ItemsCrear = {
+    name: string;
+	description: string;
+	price: number;
+	descount: number;
+}
+
+export type ItemsEditar = {
+    name: string;
+	description: string;
+	price: number;
+	descount: number;
+	status_id: number; 
+}
+
 export type Afiliados = {
     id: number;
     usuario: string;

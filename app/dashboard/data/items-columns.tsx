@@ -1,9 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Cliente } from "@/types";
+import { Items } from "@/types";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, MoreHorizontal, Eye, ClipboardList, Pencil } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Eye, Trash2, Pencil } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 
-export const columns: ColumnDef<Cliente>[] = [
+export const columns: ColumnDef<Items>[] = [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -35,12 +35,12 @@ export const columns: ColumnDef<Cliente>[] = [
         },
         meta: {
             displayName: "Nombre", // Nombre para el menú
-            cellClassName: "w-[150px]", 
+            cellClassName: "w-[300px]", 
         }
     },
 
     {
-        accessorKey: "lastname",
+        accessorKey: "description",
         header: ({ column }) => {
             return (
                 <Button
@@ -48,23 +48,23 @@ export const columns: ColumnDef<Cliente>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     className="cursor-pointer"
                 >
-                    Apellido
+                    Descripción
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
         },
         cell: ({ row }) => {
-            const lastname = row.getValue("lastname") as string;
-            return <div className="text-left font-medium px-3 capitalize">{lastname}</div>;
+            const description = row.getValue("description") as string;
+            return <div className="text-left font-medium px-3">{description}</div>;
         },
         meta: {
-            displayName: "Apellido", // Nombre para el menú
-            cellClassName: "w-[150px]", 
+            displayName: "Descripción", // Nombre para el menú
+            cellClassName: "", 
         }
     },
 
     {
-        accessorKey: "email",
+        accessorKey: "price",
         header: ({ column }) => {
             return (
                 <Button
@@ -72,54 +72,42 @@ export const columns: ColumnDef<Cliente>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     className="cursor-pointer"
                 >
-                    Email
+                    Precio
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             );
         },
         cell: ({ row }) => {
             // Mostramos el valor ya formateado que nos da la API
-            return <div className="text-left font-medium px-3">{row.getValue("email")}</div>;
+            return <div className="text-left font-medium px-3">{row.getValue("price")}</div>;
         },
         meta: {
-            displayName: "Email" // Nombre para el menú
+            displayName: "Precio", // Nombre para el menú
+            cellClassName: "w-[150px]", 
         }
     },
 
-    // Columna para el Tipo Cliente (mapeando el número a un texto)
     {
-        accessorKey: "type_id",
-        header: "Tipo Cliente",
-        cell: ({ row }) => {
-            const type = row.getValue("type_id");
-            let statusText = "Desconocido";
-            let statusClass = "bg-gray-100 text-gray-800";
-
-            switch (type) {
-                case 1:
-                    statusText = "Cliente";
-                    statusClass = "bg-green-100 text-green-800";
-                break;
-                case 2:
-                    statusText = "Prospecto";
-                    statusClass = "bg-gray-100 text-gray-800";
-                break;
-                case 3:
-                    statusText = "Proveedor";
-                    statusClass = "bg-red-100 text-red-800";
-                break;
-            }
-        
-            // Usamos un "Badge" para que se vea más bonito
+        accessorKey: "descount",
+        header: ({ column }) => {
             return (
-                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}`}>
-                    {statusText}
-                </span>
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="cursor-pointer"
+                >
+                    Descuento (%)
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
             );
         },
+        cell: ({ row }) => {
+            // Mostramos el valor ya formateado que nos da la API
+            return <div className="text-left font-medium px-3">{row.getValue("descount")}%</div>;
+        },
         meta: {
-            displayName: "Tipo Cliente",
-            cellClassName: "w-[120px]", 
+            displayName: "Descuento", // Nombre para el menú
+            cellClassName: "w-[150px]", 
         }
     },
 
@@ -140,10 +128,6 @@ export const columns: ColumnDef<Cliente>[] = [
                 case 2:
                     statusText = "Inactivo";
                     statusClass = "bg-yellow-100 text-yellow-800";
-                break;
-                case 18:
-                    statusText = "Bloqueado";
-                    statusClass = "bg-red-100 text-red-800";
                 break;
             }
         
@@ -189,7 +173,7 @@ export const columns: ColumnDef<Cliente>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const client: Cliente = row.original;
+            const item: Items = row.original;
 
             return (
                 <DropdownMenu>
@@ -203,18 +187,18 @@ export const columns: ColumnDef<Cliente>[] = [
                         <DropdownMenuLabel>Acciones</DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem>
-                            <Link href={`/dashboard/clientes/${client.id}/ficha`}>
+                            <Link href={`/dashboard/items/${item.id}/ficha`}>
                                 <Eye className="ml-2 h-4 w-4 me-2 inline-flex " /> Ver mas
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                            <Link href={`/dashboard/clientes/${client.id}/edit`}>
+                            <Link href={`/dashboard/items/${item.id}/edit`}>
                                 <Pencil className="ml-2 h-4 w-4 me-2 inline-flex " /> Actualizar
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer">
-                            <Link href={`/dashboard/clientes/${client.id}/ficha`}>
-                                <ClipboardList className="ml-2 h-4 w-4 me-2 inline-flex " /> Presupuestos
+                            <Link href={`/dashboard/items/${item.id}/ficha`}>
+                                <Trash2 className="ml-2 h-4 w-4 me-2 inline-flex " /> Eliminar
                             </Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

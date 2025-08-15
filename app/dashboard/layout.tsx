@@ -9,7 +9,7 @@ import {
   Package,
   PanelLeft,
   PanelLeftClose,
-  ShoppingCart,
+  ClipboardList,
   Users,
   LogOut,
 } from "lucide-react";
@@ -36,8 +36,8 @@ export default function DashboardLayout({
   const navItems = [
     { href: "/dashboard", icon: Home, label: "Inicio" },
     { href: "/dashboard/clientes", icon: Users, label: "Clientes" },
-    // { href: "/dashboard/orders", icon: ShoppingCart, label: "Pedidos" },
-    // { href: "/dashboard/products", icon: Package, label: "Productos" },
+    { href: "/dashboard/items", icon: Package, label: "Productos y Servicios" },
+    { href: "/dashboard/budget", icon: ClipboardList, label: "Presupuestos" },
     // { href: "/dashboard/analytics", icon: LineChart, label: "Analíticas" },
   ];
 
@@ -46,7 +46,7 @@ export default function DashboardLayout({
     try {
 
       // Llamamos al endpoint de verificación de sesión de AdonisJS
-      await fetchWithAuthLogout('/oauth/logout', { method: 'GET' });
+      await fetchWithAuthLogout('/auth/logout', { method: 'GET' });
 
     } catch (error) {
       console.error("Fallo en la petición de logout:", error);
