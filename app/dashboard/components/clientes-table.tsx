@@ -85,7 +85,7 @@ export function ClientesDataTable() {
     }, []); 
 
     return (
-        <div>
+        <div className="responsive-table-wrapper">
             <h2 className="text-2xl font-bold mb-4">Lista de clientes</h2>
 
             {/* Mostramos el error global por encima de la tabla si ocurre */}

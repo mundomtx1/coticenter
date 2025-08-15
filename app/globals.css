@@ -120,3 +120,31 @@
     @apply bg-background text-foreground;
   }
 }
+
+@media (max-width: 767px) { /* Corresponde al breakpoint 'md' de Tailwind */
+  .responsive-table-wrapper thead {
+    @apply hidden;
+  }
+
+  .responsive-table-wrapper tr {
+    @apply mb-4 block rounded-lg border bg-card shadow-sm;
+  }
+
+  .responsive-table-wrapper td {
+    @apply block h-auto p-4 text-right;
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  
+  .responsive-table-wrapper tr:last-child {
+      @apply mb-0;
+  }
+
+  .responsive-table-wrapper td:last-child {
+    @apply border-b-0;
+  }
+
+  .responsive-table-wrapper td::before {
+    content: attr(data-label);
+    @apply float-left pr-4 text-left font-semibold text-muted-foreground;
+  }
+}

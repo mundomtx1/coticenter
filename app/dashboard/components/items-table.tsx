@@ -80,7 +80,7 @@ export function ItemsDataTable() {
     }, []); 
 
     return (
-        <div>
+        <div className="responsive-table-wrapper">
             <h2 className="text-2xl font-bold mb-4">Listado de items</h2>
 
             {/* Mostramos el error global por encima de la tabla si ocurre */}

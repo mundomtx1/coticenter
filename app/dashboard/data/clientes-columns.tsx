@@ -194,9 +194,11 @@ export const columns: ColumnDef<Cliente>[] = [
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0 cursor-pointer">
-                            <span className="sr-only">Abrir menú</span>
-                            <MoreHorizontal className="h-4 w-4" />
+                        {/* Botón responsive: texto en móvil, icono en escritorio */}
+                        <Button variant="ghost" className="ml-6 h-8 w-full justify-center px-2 md:w-8 md:px-0 cursor-pointer">
+                            <span className="md:hidden">Acciones</span>
+                            <MoreHorizontal className="hidden h-4 w-4 md:block" />
+                            <span className="sr-only">Abrir menú de acciones</span>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -222,7 +224,7 @@ export const columns: ColumnDef<Cliente>[] = [
             );
         },
         meta:{
-            cellClassName: "w-[60px] text-right", 
+            cellClassName: "w-[60px] text-center", 
         }
     },
 ];
